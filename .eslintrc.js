@@ -10,6 +10,9 @@ module.exports = {
   overrides: [
   ],
   parserOptions: {
+    ecmaFeatures: {
+      jsx: true,
+    },
     ecmaVersion: 'latest',
     sourceType: 'module',
   },
@@ -17,5 +20,9 @@ module.exports = {
     'react',
   ],
   rules: {
+    'react/prop-types': 'off',
+    'react/jsx-uses-react': 'off',
+    'react/react-in-jsx-scope': 'off',
+    'react/jsx-no-bind': 'off',
   },
 };
