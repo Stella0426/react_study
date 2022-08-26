@@ -63,7 +63,7 @@ export default function Game() {
     if (winner) return;
     // if(winner || squares[i]) return;
 
-    const newHistory = [...history];
+    // const newHistory = [...history];
 
     const newSquares = [...history[current]]; // 새로운 주소를 만들어주기 위해 전개연산자 사용 !
     // setState가 바뀐걸 인지 못함 (메모리 주소값이 같으니까..) 다만, 값은 바뀌긴함.
@@ -80,11 +80,13 @@ export default function Game() {
     // }
     // console.log(newSquares);
 
-    newHistory.push(newSquares);
+    // newHistory.push(newSquares);
 
     setState({
       count: count + 1,
-      history: newHistory,
+      // history: newHistory,
+      history: history.concat([newSquares]),
+      // concat 메서드는 합쳐준 후, 새로운 메모리에 저장해줌 그래서 위에 newHistory하고 push한 것을 concat은 한방에 해줌
       isNext: !isNext, // true false 반복의 향연
     });
   }
