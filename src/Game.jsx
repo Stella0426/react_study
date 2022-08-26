@@ -21,7 +21,7 @@ export default function Game() {
 
   // const { isNext, count, squares } = state;
   const { isNext, count, history } = state;
-  const current = history.length - 1;
+  // const current = history.length - 1;
 
   // 승자가 있는지 확인해주는 함수
   function calculateWinner(item) {
@@ -46,7 +46,7 @@ export default function Game() {
 
   // caculateWinner는 가장 최신의 순서에서 winner가 있는지 check해서 알려줌!
   // 승자가 있으면 O나 X가 winner에 들어가고, 승자가 없으면 null이 winner에 들어감!!
-  const winner = calculateWinner(history[current]);
+  const winner = calculateWinner(history[count]);
 
   let status;
 
@@ -56,16 +56,16 @@ export default function Game() {
   // 함수 이름 짓는 법(컨벤션) : 이벤트를 처리하는 함수는 앞에 handle을 붙여주기
   // ex. click 이벤트 => handleClick
 
-  function handleClick(i) {
+  function handleClickSquare(i) {
     // if (count === 10) return;
     // if (squares[i] !== null) return;
-    if (history[current][i]) return; // squares[i]에 값이 있으면 멈춰!
+    if (history[count][i]) return; // squares[i]에 값이 있으면 멈춰!
     if (winner) return;
     // if(winner || squares[i]) return;
 
     // const newHistory = [...history];
 
-    const newSquares = [...history[current]]; // 새로운 주소를 만들어주기 위해 전개연산자 사용 !
+    const newSquares = [...history[count]]; // 새로운 주소를 만들어주기 위해 전개연산자 사용 !
     // setState가 바뀐걸 인지 못함 (메모리 주소값이 같으니까..) 다만, 값은 바뀌긴함.
     // const newSquares = squares.slice() ** slice()는 얕은 복사(메모리주소 복사 ㄴㄴ)
     // 불변성 ?? -> 객체나 배열에 내부값을 직접 변경하면, 참조값(메모리주소)이 그대로여서 변화가 없음!(원본은 안바뀌고 다른 곳에 복사하는 것)
@@ -85,7 +85,7 @@ export default function Game() {
     setState({
       count: count + 1,
       // history: newHistory,
-      history: history.concat([newSquares]),
+      history: history.filter((el, index) => index <= count).concat([newSquares]),
       // concat 메서드는 합쳐준 후, 새로운 메모리에 저장해줌 그래서 위에 newHistory하고 push한 것을 concat은 한방에 해줌
       isNext: !isNext, // true false 반복의 향연
     });
@@ -95,8 +95,8 @@ export default function Game() {
   function renderSquare(i) {
     return (
       <Square
-        value={history[current][i]}
-        onClick={() => handleClick(i)}
+        value={history[count][i]}
+        onClick={() => handleClickSquare(i)}
       />
     );
   }console.log(history);
@@ -104,14 +104,29 @@ export default function Game() {
   // count % 2 가 1(true)일 때 : 'X', 0(false)일 때 : 'O'
   // const status = `Next player : ${count % 2 ? 'X' : 'O'}`;
   // const status = `Next player : ${isNext ? 'X' : 'O'}`;
+
+  function handleClickReturn(num) {
+    setState({
+      ...state,
+      count: num,
+      isNext: !(num % 2),
+    });
+  }
   return (
     <div className="game">
       <div className="game-board">
         <Board status={status} renderSquare={renderSquare} />
       </div>
       <div className="game-info">
-        <div>{/* status */}</div>
-        <ol>{/* TODO */}</ol>
+        <div>{status}</div>
+        <ol>
+          {history.map((el, index) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <li key={index}>
+              <button type="button" onClick={() => handleClickReturn(index)}>{index ? `Go to move # ${index}` : 'Go to game start'}</button>
+            </li>
+          ))}
+        </ol>
       </div>
     </div>
   );
